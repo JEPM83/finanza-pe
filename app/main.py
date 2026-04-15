@@ -118,7 +118,7 @@ def test_nlp(pregunta: str = "balance"):
 
 
 # ── Rutas API ─────────────────────────────────────────────────────────────────
-from app.api.routes import cuentas, transacciones, categorias, reportes  # noqa: E402
+from app.api.routes import cuentas, transacciones, categorias, reportes, admin  # noqa: E402
 from app.api.routes import auth  # noqa: E402
 
 app.include_router(auth.router,          tags=["Auth"])
@@ -126,6 +126,7 @@ app.include_router(cuentas.router,       prefix="/api/cuentas",       tags=["Cue
 app.include_router(transacciones.router, prefix="/api/transacciones", tags=["Transacciones"])
 app.include_router(categorias.router,    prefix="/api/categorias",    tags=["Categorías"])
 app.include_router(reportes.router,      prefix="/api/reportes",      tags=["Reportes"])
+app.include_router(admin.router,         prefix="/api/admin",         tags=["Admin"])
 
 
 # ── Portal web (protegido) ────────────────────────────────────────────────────
@@ -159,3 +160,27 @@ def pagina_reportes(request: Request):
     if redir:
         return redir
     return templates.TemplateResponse("reportes.html", {"request": request})
+
+
+@app.get("/admin/instituciones", include_in_schema=False)
+def pagina_admin_instituciones(request: Request):
+    redir = _login_requerido(request)
+    if redir:
+        return redir
+    return templates.TemplateResponse("admin_instituciones.html", {"request": request})
+
+
+@app.get("/admin/cuentas", include_in_schema=False)
+def pagina_admin_cuentas(request: Request):
+    redir = _login_requerido(request)
+    if redir:
+        return redir
+    return templates.TemplateResponse("admin_cuentas.html", {"request": request})
+
+
+@app.get("/admin/usuarios", include_in_schema=False)
+def pagina_admin_usuarios(request: Request):
+    redir = _login_requerido(request)
+    if redir:
+        return redir
+    return templates.TemplateResponse("admin_usuarios.html", {"request": request})
