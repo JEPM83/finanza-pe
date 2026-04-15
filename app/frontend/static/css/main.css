@@ -872,11 +872,13 @@ a:hover { color: var(--text-bright); }
   backdrop-filter: blur(2px);
   z-index: 99;
   opacity: 0;
+  pointer-events: none;          /* no bloquea clics cuando está invisible */
   transition: opacity .25s;
 }
 
 .sidebar-overlay.visible {
   opacity: 1;
+  pointer-events: auto;          /* activa solo cuando el sidebar está abierto */
 }
 
 /* ═══════════════════════════════
@@ -909,8 +911,8 @@ a:hover { color: var(--text-bright); }
   /* Hamburger visible en topbar */
   .btn-hamburger { display: flex; align-items: center; }
 
-  /* Overlay activo */
-  .sidebar-overlay { display: block; }
+  /* Overlay: visible en DOM pero sin bloquear clics hasta que sidebar abra */
+  .sidebar-overlay { display: block; pointer-events: none; }
 
   /* Grids se apilan */
   .two-col   { grid-template-columns: 1fr; }
