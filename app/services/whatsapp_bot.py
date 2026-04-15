@@ -118,11 +118,6 @@ def extraer_texto_mensaje(notificacion: dict) -> tuple[str | None, int | None]:
 
     texto = msg_data.get("textMessageData", {}).get("textMessage", "").strip()
 
-    # Ignorar mensajes enviados por el propio bot (eco de mensajes salientes)
     sender = body.get("senderData", {}).get("sender", "")
-    if body.get("senderData", {}).get("senderName") == "me" or \
-       sender == _chat_id(settings.whatsapp_number):
-        return None, receipt_id
-
     logger.info(f"Mensaje de {sender}: {texto[:40]}")
     return texto, receipt_id
