@@ -60,6 +60,14 @@ async function cargarReporte() {
 function renderEvolucion(data) {
   if (_chartEv) _chartEv.destroy();
   const ctx = document.getElementById('chartEvolucion').getContext('2d');
+  const cyberTooltip = {
+    backgroundColor: '#10102a',
+    borderColor: '#00f5ff',
+    borderWidth: 1,
+    titleColor: '#00f5ff',
+    bodyColor: '#b8cce0',
+  };
+
   _chartEv = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -68,18 +76,18 @@ function renderEvolucion(data) {
         {
           label: 'Gastos',
           data: data.map(d => d.gastos),
-          backgroundColor: 'rgba(217,48,37,.7)',
-          borderColor: 'rgba(217,48,37,1)',
+          backgroundColor: 'rgba(255,45,107,.55)',
+          borderColor: '#ff2d6b',
           borderWidth: 1,
-          borderRadius: 4,
+          borderRadius: 0,
         },
         {
           label: 'Ingresos',
           data: data.map(d => d.ingresos),
-          backgroundColor: 'rgba(30,142,62,.7)',
-          borderColor: 'rgba(30,142,62,1)',
+          backgroundColor: 'rgba(0,255,136,.4)',
+          borderColor: '#00ff88',
           borderWidth: 1,
-          borderRadius: 4,
+          borderRadius: 0,
         },
       ],
     },
@@ -87,18 +95,20 @@ function renderEvolucion(data) {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'bottom' },
+        legend: {
+          position: 'bottom',
+          labels: { color: '#b8cce0', font: { family: 'JetBrains Mono' }, boxWidth: 12 },
+        },
         tooltip: {
-          callbacks: {
-            label: ctx => ` S/ ${fmt(ctx.raw)}`,
-          },
+          ...cyberTooltip,
+          callbacks: { label: ctx => ` S/ ${fmt(ctx.raw)}` },
         },
       },
       scales: {
+        x: { ticks: { color: '#3a4a6a', font: { family: 'JetBrains Mono', size: 11 } }, grid: { color: '#1a2448' } },
         y: {
-          ticks: {
-            callback: v => 'S/ ' + fmt(v),
-          },
+          ticks: { color: '#3a4a6a', font: { family: 'JetBrains Mono', size: 10 }, callback: v => 'S/ ' + fmt(v) },
+          grid: { color: '#1a2448' },
           beginAtZero: true,
         },
       },
@@ -125,7 +135,8 @@ function renderCategorias(data) {
       datasets: [{
         data: data.map(c => c.total),
         backgroundColor: data.map(c => c.color),
-        borderWidth: 2,
+        borderWidth: 1,
+        borderColor: '#0b0b18',
       }],
     },
     options: {
@@ -134,6 +145,11 @@ function renderCategorias(data) {
       plugins: {
         legend: { display: false },
         tooltip: {
+          backgroundColor: '#10102a',
+          borderColor: '#00f5ff',
+          borderWidth: 1,
+          titleColor: '#00f5ff',
+          bodyColor: '#b8cce0',
           callbacks: {
             label: ctx => ` S/ ${fmt(ctx.raw)} (${((ctx.raw/total)*100).toFixed(1)}%)`,
           },

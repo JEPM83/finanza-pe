@@ -102,13 +102,18 @@ async function cargarDashboard() {
     const ctx = document.getElementById('chartCategoria').getContext('2d');
     _chartCat = new Chart(ctx, {
       type: 'doughnut',
-      data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 2 }] },
+      data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 1, borderColor: '#0b0b18' }] },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
           tooltip: {
+            backgroundColor: '#10102a',
+            borderColor: '#00f5ff',
+            borderWidth: 1,
+            titleColor: '#00f5ff',
+            bodyColor: '#b8cce0',
             callbacks: {
               label: ctx => ` S/ ${fmt(ctx.raw)} (${((ctx.raw / data.reduce((a,b)=>a+b,0))*100).toFixed(1)}%)`,
             },

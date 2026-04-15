@@ -11,11 +11,11 @@
 <!-- Sidebar -->
 <nav class="sidebar">
   <div class="sidebar-brand">
-    <h1>&#128181; Finanza PE</h1>
-    <div class="subtitle">Monitor de finanzas personales</div>
+    <h1>// FINANZA.PE</h1>
+    <div class="subtitle">&gt;&gt;&gt; financial_monitor v0.1</div>
   </div>
   <div class="nav-section">
-    <div class="nav-label">Menu</div>
+    <div class="nav-label">&gt; sistema</div>
     <a href="/" class="nav-link">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Dashboard
@@ -39,9 +39,9 @@
   <div class="topbar">
     <h2>Reportes</h2>
     <div style="display:flex;align-items:center;gap:8px">
-      <label style="font-size:.8rem;color:var(--text-muted)">Mes:</label>
-      <select id="selectorMes" style="padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:.875rem"></select>
-      <select id="selectorAnio" style="padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:.875rem"></select>
+      <label style="font-size:.65rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase">Mes:</label>
+      <select id="selectorMes"></select>
+      <select id="selectorAnio"></select>
       <button class="btn btn-primary btn-sm" onclick="cargarReporte()">Actualizar</button>
     </div>
   </div>
@@ -65,7 +65,7 @@
       <div class="card">
         <div class="card-header">
           <h3>Gastos por categoría</h3>
-          <span id="labelCatMes" style="font-size:.8rem;color:var(--text-muted)"></span>
+          <span id="labelCatMes" style="font-size:.68rem;color:var(--text-dim);letter-spacing:.5px"></span>
         </div>
         <div class="card-body">
           <div class="chart-container" style="height:260px">
@@ -78,7 +78,7 @@
       <div class="card">
         <div class="card-header">
           <h3>Top comercios</h3>
-          <span id="labelComMes" style="font-size:.8rem;color:var(--text-muted)"></span>
+          <span id="labelComMes" style="font-size:.68rem;color:var(--text-dim);letter-spacing:.5px"></span>
         </div>
         <div class="table-wrap">
           <table>
