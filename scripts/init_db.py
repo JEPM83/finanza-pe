@@ -28,6 +28,7 @@ def sembrar_instituciones(db: Session) -> dict[str, Institucion]:
         {"nombre": "Pichincha",     "dominios_email": "pichincha.pe"},
         {"nombre": "Caja Arequipa", "dominios_email": "cajaarequipa.pe"},
         {"nombre": "Ligo",          "dominios_email": "ligo.pe"},
+        {"nombre": "Efectivo",      "dominios_email": ""},
     ]
     instituciones = {}
     for data in instituciones_data:
@@ -58,6 +59,8 @@ def sembrar_cuentas(db: Session, instituciones: dict[str, Institucion]):
         {"institucion": "Caja Arequipa", "nombre": "Caja Arequipa Soles",     "tipo": "ahorros",    "moneda": "PEN"},
         # Ligo
         {"institucion": "Ligo",          "nombre": "Tarjeta La Mágica",       "tipo": "credito",    "moneda": "PEN"},
+        # Efectivo
+        {"institucion": "Efectivo",      "nombre": "Efectivo Soles",          "tipo": "efectivo",   "moneda": "PEN"},
     ]
     for data in cuentas_data:
         nombre_inst = data.pop("institucion")

@@ -9,7 +9,8 @@ class Institucion(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(String(100), nullable=False)
     # Dominios de email separados por coma: "notificacionesbcp.com.pe,bcp.com.pe"
-    dominios_email: Mapped[str] = mapped_column(String(500), nullable=False)
+    # Vacío para instituciones sin email (ej: Efectivo)
+    dominios_email: Mapped[str] = mapped_column(String(500), nullable=False, default="")
     activa: Mapped[bool] = mapped_column(Boolean, default=True)
 
     cuentas: Mapped[list["Cuenta"]] = relationship(back_populates="institucion")
