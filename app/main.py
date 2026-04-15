@@ -1,23 +1,48 @@
 import logging
 from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.sessions import SessionMiddleware
 from contextlib import asynccontextmanager
 
 from app.database import engine
 from app.models import *  # noqa: F401,F403
+from app.config import get_settings
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 logger = logging.getLogger(__name__)
+settings = get_settings()
+
+
+def _seed_admin():
+    """Crea el usuario admin con clave 123 si no existe."""
+    from passlib.context import CryptContext
+    from app.database import SessionLocal
+    from app.models.usuario import Usuario
+
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    db = SessionLocal()
+    try:
+        if not db.query(Usuario).filter(Usuario.username == "admin").first():
+            db.add(Usuario(
+                username="admin",
+                password_hash=pwd_context.hash("123"),
+            ))
+            db.commit()
+            logger.info("Usuario admin creado.")
+    finally:
+        db.close()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     from app.database import Base
     Base.metadata.create_all(bind=engine)
+    _seed_admin()
 
     from app.scheduler.jobs import iniciar_scheduler
     iniciar_scheduler()
@@ -37,8 +62,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 app.mount("/static", StaticFiles(directory="app/frontend/static"), name="static")
 templates = Jinja2Templates(directory="app/frontend/templates")
+
+
+def _login_requerido(request: Request):
+    """Devuelve RedirectResponse si no hay sesión activa, None si está autenticado."""
+    if not request.session.get("user_id"):
+        return RedirectResponse("/login", status_code=302)
+    return None
 
 
 # ── Health check ─────────────────────────────────────────────────────────────
@@ -50,10 +83,6 @@ def health():
 # ── Webhook WhatsApp (Green API) ──────────────────────────────────────────────
 @app.post("/webhook/whatsapp", tags=["WhatsApp"])
 async def webhook_whatsapp(request: Request):
-    """
-    Endpoint que recibe notificaciones de Green API.
-    Configurar en Green API: Settings → Webhook URL → https://TU-VM/webhook/whatsapp
-    """
     try:
         body = await request.json()
         from app.services.whatsapp_bot import extraer_texto_mensaje, enviar_mensaje
@@ -73,10 +102,9 @@ async def webhook_whatsapp(request: Request):
     return {"status": "ok"}
 
 
-# ── Endpoint de prueba WhatsApp ───────────────────────────────────────────────
+# ── Endpoints de prueba ───────────────────────────────────────────────────────
 @app.post("/test/whatsapp", tags=["Sistema"])
 def test_whatsapp(mensaje: str = "Hola, prueba de conexión"):
-    """Envía un mensaje de prueba a tu WhatsApp."""
     from app.services.whatsapp_bot import enviar_mensaje
     ok = enviar_mensaje(f"Prueba finanza-pe: {mensaje}")
     return {"enviado": ok}
@@ -84,7 +112,6 @@ def test_whatsapp(mensaje: str = "Hola, prueba de conexión"):
 
 @app.post("/test/nlp", tags=["Sistema"])
 def test_nlp(pregunta: str = "balance"):
-    """Prueba el NLP con Claude sin enviar a WhatsApp."""
     from app.services.claude_nlp import procesar_mensaje
     respuesta = procesar_mensaje(pregunta)
     return {"pregunta": pregunta, "respuesta": respuesta}
@@ -92,29 +119,43 @@ def test_nlp(pregunta: str = "balance"):
 
 # ── Rutas API ─────────────────────────────────────────────────────────────────
 from app.api.routes import cuentas, transacciones, categorias, reportes  # noqa: E402
+from app.api.routes import auth  # noqa: E402
 
+app.include_router(auth.router,          tags=["Auth"])
 app.include_router(cuentas.router,       prefix="/api/cuentas",       tags=["Cuentas"])
 app.include_router(transacciones.router, prefix="/api/transacciones", tags=["Transacciones"])
 app.include_router(categorias.router,    prefix="/api/categorias",    tags=["Categorías"])
 app.include_router(reportes.router,      prefix="/api/reportes",      tags=["Reportes"])
 
 
-# ── Portal web ────────────────────────────────────────────────────────────────
+# ── Portal web (protegido) ────────────────────────────────────────────────────
 @app.get("/", include_in_schema=False)
 def dashboard(request: Request):
+    redir = _login_requerido(request)
+    if redir:
+        return redir
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
 
 @app.get("/transacciones", include_in_schema=False)
 def pagina_transacciones(request: Request):
+    redir = _login_requerido(request)
+    if redir:
+        return redir
     return templates.TemplateResponse("transacciones.html", {"request": request})
 
 
 @app.get("/cuentas", include_in_schema=False)
 def pagina_cuentas(request: Request):
+    redir = _login_requerido(request)
+    if redir:
+        return redir
     return templates.TemplateResponse("cuentas.html", {"request": request})
 
 
 @app.get("/reportes", include_in_schema=False)
 def pagina_reportes(request: Request):
+    redir = _login_requerido(request)
+    if redir:
+        return redir
     return templates.TemplateResponse("reportes.html", {"request": request})
