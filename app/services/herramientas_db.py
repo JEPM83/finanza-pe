@@ -2,8 +2,15 @@
 Herramientas de base de datos para Claude Tool Use.
 Cada función consulta SQLite y retorna datos estructurados.
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
+
+_LIMA = timezone(timedelta(hours=-5))
+
+def _fmt_fecha(dt: datetime, con_hora: bool = True) -> str:
+    """Convierte datetime UTC → hora Lima y formatea."""
+    dt_lima = dt.replace(tzinfo=timezone.utc).astimezone(_LIMA)
+    return dt_lima.strftime("%d/%m/%Y %H:%M") if con_hora else dt_lima.strftime("%d/%m/%Y")
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
@@ -24,6 +31,9 @@ def _rango_periodo(periodo: str) -> tuple[datetime, datetime]:
     hoy = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     if periodo == "hoy":
         return hoy, datetime.now()
+    if periodo == "ayer":
+        ayer = hoy - timedelta(days=1)
+        return ayer, hoy
     if periodo == "esta_semana":
         inicio = hoy - timedelta(days=hoy.weekday())
         return inicio, datetime.now()
@@ -83,7 +93,7 @@ def obtener_balance() -> dict:
             "cuentas": resultado,
             "total_consolidado_pen": float(total_pen),
             "tipo_cambio": float(tc),
-            "fecha": datetime.now().strftime("%d/%m/%Y %H:%M"),
+            "fecha": _fmt_fecha(datetime.now()),
         }
     finally:
         db.close()
@@ -154,7 +164,7 @@ def obtener_transacciones_recientes(
         return {
             "transacciones": [
                 {
-                    "fecha": tx.fecha.strftime("%d/%m/%Y %H:%M"),
+                    "fecha": _fmt_fecha(tx.fecha),
                     "tipo": tx.tipo,
                     "monto": float(tx.monto),
                     "moneda": tx.moneda,
@@ -272,7 +282,7 @@ def buscar_transacciones(busqueda: str, limite: int = 10) -> dict:
             "busqueda": busqueda,
             "transacciones": [
                 {
-                    "fecha": tx.fecha.strftime("%d/%m/%Y"),
+                    "fecha": _fmt_fecha(tx.fecha),
                     "tipo": tx.tipo,
                     "monto": float(tx.monto),
                     "moneda": tx.moneda,
@@ -326,7 +336,7 @@ def registrar_transaccion_efectivo(
             "monto": monto,
             "descripcion": descripcion,
             "categoria": categoria.nombre if categoria else "Sin categoría",
-            "fecha": tx.fecha.strftime("%d/%m/%Y %H:%M"),
+            "fecha": _fmt_fecha(tx.fecha),
         }
     except Exception as e:
         db.rollback()

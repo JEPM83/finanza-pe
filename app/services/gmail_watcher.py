@@ -72,13 +72,9 @@ def _decodificar_email(mensaje_raw: dict) -> EmailData | None:
         headers = {h["name"]: h["value"] for h in mensaje_raw["payload"]["headers"]}
         remitente = headers.get("From", "")
         asunto = headers.get("Subject", "")
-        fecha_str = headers.get("Date", "")
-
-        try:
-            from email.utils import parsedate_to_datetime
-            fecha = parsedate_to_datetime(fecha_str).replace(tzinfo=None)
-        except Exception:
-            fecha = datetime.utcnow()
+        # internalDate es Unix timestamp en ms, siempre UTC — más confiable que el header Date
+        internal_ms = int(mensaje_raw.get("internalDate", 0))
+        fecha = datetime.utcfromtimestamp(internal_ms / 1000) if internal_ms else datetime.utcnow()
 
         # Extraer cuerpo HTML y texto
         cuerpo_html = ""
@@ -195,6 +191,7 @@ def procesar_emails(dias: int = 1):
             db.flush()
 
             # Guardar cada transacción
+            nuevas_txs = []
             for tx in transacciones:
                 cuenta_id = _resolver_cuenta_id(tx.cuenta_nombre, db)
                 if not cuenta_id:
@@ -216,10 +213,26 @@ def procesar_emails(dias: int = 1):
                     numero_operacion=tx.numero_operacion,
                 )
                 db.add(nueva_tx)
+                nuevas_txs.append((nueva_tx, tx.cuenta_nombre))
 
             db.commit()
             procesados += 1
             logger.info(f"  [{email_data.remitente}] {email_data.asunto} → {len(transacciones)} transacción(es)")
+
+            # Notificar por WhatsApp cada transacción nueva
+            try:
+                from app.services.whatsapp_bot import notificar_transaccion
+                for nueva_tx, cuenta_nombre_raw in nuevas_txs:
+                    db.refresh(nueva_tx)
+                    cuenta_obj = db.get(Cuenta, nueva_tx.cuenta_id)
+                    categoria_obj = db.get(Categoria, nueva_tx.categoria_id) if nueva_tx.categoria_id else None
+                    notificar_transaccion(
+                        nueva_tx,
+                        cuenta_obj.nombre if cuenta_obj else cuenta_nombre_raw,
+                        categoria_obj.nombre if categoria_obj else None,
+                    )
+            except Exception as e:
+                logger.warning(f"No se pudo notificar por WhatsApp: {e}")
 
         logger.info(f"Gmail Watcher: {nuevos} emails nuevos, {procesados} con transacciones registradas.")
 

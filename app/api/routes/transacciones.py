@@ -10,7 +10,7 @@ router = APIRouter()
 def _tx_dict(tx: Transaccion) -> dict:
     return {
         "id": tx.id,
-        "fecha": tx.fecha.isoformat(),
+        "fecha": tx.fecha.isoformat() + "Z",
         "monto": float(tx.monto),
         "moneda": tx.moneda,
         "tipo": tx.tipo,

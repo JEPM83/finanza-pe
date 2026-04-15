@@ -4,6 +4,7 @@ Maneja envío de notificaciones y recepción de mensajes.
 """
 import logging
 import httpx
+from datetime import timezone, timedelta
 from app.config import get_settings
 
 logger = logging.getLogger(__name__)
@@ -55,11 +56,14 @@ def notificar_transaccion(tx, cuenta_nombre: str, categoria_nombre: str | None) 
     simbolo = "$" if tx.moneda == "USD" else "S/"
     cat_texto = f"\nCategoría: {categoria_nombre}" if categoria_nombre else ""
 
+    LIMA = timezone(timedelta(hours=-5))
+    fecha_lima = tx.fecha.replace(tzinfo=timezone.utc).astimezone(LIMA)
+
     mensaje = (
         f"{icono} *{cuenta_nombre}*\n"
         f"{tipo_texto}: {simbolo} {tx.monto:,.2f}\n"
         f"{tx.descripcion}{cat_texto}\n"
-        f"_{tx.fecha.strftime('%d %b %Y, %I:%M %p')}_"
+        f"_{fecha_lima.strftime('%d %b %Y, %I:%M %p')}_"
     )
     return enviar_mensaje(mensaje)
 
@@ -72,7 +76,7 @@ def obtener_mensajes_pendientes() -> list[dict]:
     if not settings.green_api_instance:
         return []
     try:
-        resp = httpx.get(_url("receiveNotification"), timeout=10)
+        resp = httpx.get(_url("receiveNotification"), timeout=25)  # Green API long-polls up to 20s
         resp.raise_for_status()
         data = resp.json()
         if not data:
@@ -114,11 +118,11 @@ def extraer_texto_mensaje(notificacion: dict) -> tuple[str | None, int | None]:
 
     texto = msg_data.get("textMessageData", {}).get("textMessage", "").strip()
 
-    # Verificar que el mensaje viene del número autorizado
+    # Ignorar mensajes enviados por el propio bot (eco de mensajes salientes)
     sender = body.get("senderData", {}).get("sender", "")
-    numero_autorizado = _chat_id(settings.whatsapp_number)
-    if sender != numero_autorizado:
-        logger.warning(f"Mensaje de número no autorizado: {sender}")
+    if body.get("senderData", {}).get("senderName") == "me" or \
+       sender == _chat_id(settings.whatsapp_number):
         return None, receipt_id
 
+    logger.info(f"Mensaje de {sender}: {texto[:40]}")
     return texto, receipt_id

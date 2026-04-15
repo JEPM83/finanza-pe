@@ -146,7 +146,8 @@ async function cargarDashboard() {
     return;
   }
   tbody.innerHTML = recientes.map(tx => {
-    const fecha = tx.fecha.slice(0, 10);
+    const d     = new Date(tx.fecha);
+    const fecha = d.toLocaleDateString('es-PE');
     const desc  = tx.comercio || tx.descripcion.slice(0, 40);
     const cls   = tx.tipo === 'cargo' ? 'amount-cargo' : 'amount-abono';
     const signo = tx.tipo === 'cargo' ? '-' : '+';

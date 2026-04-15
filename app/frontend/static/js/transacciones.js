@@ -100,8 +100,9 @@ async function buscar(resetOffset = true) {
   }
 
   tbody.innerHTML = data.items.map(tx => {
-    const fecha   = tx.fecha.slice(0, 10);
-    const hora    = tx.fecha.slice(11, 16);
+    const _d      = new Date(tx.fecha);
+    const fecha   = _d.toLocaleDateString('es-PE');
+    const hora    = _d.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: false });
     const desc    = tx.descripcion.length > 45 ? tx.descripcion.slice(0, 45) + '…' : tx.descripcion;
     const comercio = tx.comercio ? `<br><small style="color:var(--text-dim)">${tx.comercio}</small>` : '';
     const catColor = tx.categoria_color || '#aaa';

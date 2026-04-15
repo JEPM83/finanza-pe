@@ -37,16 +37,17 @@ def job_whatsapp_polling():
 
         notificaciones = obtener_mensajes_pendientes()
         for notif in notificaciones:
-            receipt_id = notif.get("receiptId")
             texto, receipt_id = extraer_texto_mensaje(notif)
-
-            if receipt_id:
-                confirmar_mensaje_recibido(receipt_id)
 
             if texto:
                 logger.info(f"WhatsApp mensaje recibido: {texto[:50]}")
                 respuesta = procesar_mensaje(texto)
-                enviar_mensaje(respuesta)
+                enviado = enviar_mensaje(respuesta)
+                if enviado and receipt_id:
+                    confirmar_mensaje_recibido(receipt_id)
+            elif receipt_id:
+                # No-text notification (status update, echo, etc.) — just confirm
+                confirmar_mensaje_recibido(receipt_id)
 
     except Exception as e:
         logger.error(f"Job whatsapp_polling error: {e}")
@@ -81,10 +82,10 @@ def iniciar_scheduler():
         max_instances=1,
     )
 
-    # WhatsApp polling: cada 15 segundos
+    # WhatsApp polling: cada 30 segundos (Green API long-polls 20s, no solapar)
     scheduler.add_job(
         job_whatsapp_polling,
-        trigger=IntervalTrigger(seconds=15),
+        trigger=IntervalTrigger(seconds=30),
         id="whatsapp_polling",
         replace_existing=True,
         max_instances=1,
