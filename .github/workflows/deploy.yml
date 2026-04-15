@@ -66,6 +66,7 @@ jobs:
             docker pull ghcr.io/jepm83/finanza-pe:latest
 
             echo "==> Restart container"
+            cd /home/axl18/finanza-pe
             docker compose -f docker-compose.prod.yml up -d
 
             echo "==> Health check"
