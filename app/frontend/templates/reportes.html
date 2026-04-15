@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reportes — Finanza PE</title>
+  <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <h1>&#128181; Finanza PE</h1>
+    <div class="subtitle">Monitor de finanzas personales</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Menu</div>
+    <a href="/" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a href="/transacciones" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Transacciones
+    </a>
+    <a href="/cuentas" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Cuentas
+    </a>
+    <a href="/reportes" class="nav-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Reportes
+    </a>
+  </div>
+</nav>
+
+<div class="main-wrap">
+  <div class="topbar">
+    <h2>Reportes</h2>
+    <div style="display:flex;align-items:center;gap:8px">
+      <label style="font-size:.8rem;color:var(--text-muted)">Mes:</label>
+      <select id="selectorMes" style="padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:.875rem"></select>
+      <select id="selectorAnio" style="padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:.875rem"></select>
+      <button class="btn btn-primary btn-sm" onclick="cargarReporte()">Actualizar</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Evolución mensual -->
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-header">
+        <h3>Evolución mensual — últimos 6 meses (PEN)</h3>
+      </div>
+      <div class="card-body">
+        <div class="chart-container" style="height:280px">
+          <canvas id="chartEvolucion"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gastos por categoría + Top comercios -->
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <h3>Gastos por categoría</h3>
+          <span id="labelCatMes" style="font-size:.8rem;color:var(--text-muted)"></span>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" style="height:260px">
+            <canvas id="chartCategorias"></canvas>
+          </div>
+          <div id="leyendaCat" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Top comercios</h3>
+          <span id="labelComMes" style="font-size:.8rem;color:var(--text-muted)"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Comercio</th>
+                <th style="text-align:right">Monto</th>
+                <th style="text-align:center">Veces</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyComercio">
+              <tr><td colspan="4"><div class="spinner"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="/static/js/reportes.js"></script>
+</body>
+</html>

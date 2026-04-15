@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transacciones — Finanza PE</title>
+  <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <h1>&#128181; Finanza PE</h1>
+    <div class="subtitle">Monitor de finanzas personales</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Menu</div>
+    <a href="/" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a href="/transacciones" class="nav-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Transacciones
+    </a>
+    <a href="/cuentas" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Cuentas
+    </a>
+    <a href="/reportes" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Reportes
+    </a>
+  </div>
+</nav>
+
+<div class="main-wrap">
+  <div class="topbar">
+    <h2>Transacciones</h2>
+    <span id="totalInfo" style="font-size:.875rem;color:var(--text-muted)"></span>
+  </div>
+
+  <div class="content">
+
+    <!-- Filtros -->
+    <div class="filters">
+      <div class="filter-group">
+        <label>Buscar</label>
+        <input type="text" id="fBusqueda" placeholder="Descripción o comercio..." style="min-width:180px">
+      </div>
+      <div class="filter-group">
+        <label>Cuenta</label>
+        <select id="fCuenta">
+          <option value="">Todas</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Categoría</label>
+        <select id="fCategoria">
+          <option value="">Todas</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Tipo</label>
+        <select id="fTipo">
+          <option value="">Todos</option>
+          <option value="cargo">Cargo</option>
+          <option value="abono">Abono</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Desde</label>
+        <input type="date" id="fDesde">
+      </div>
+      <div class="filter-group">
+        <label>Hasta</label>
+        <input type="date" id="fHasta">
+      </div>
+      <div class="filter-group" style="justify-content:flex-end">
+        <label>&nbsp;</label>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary" onclick="buscar()">Filtrar</button>
+          <button class="btn btn-secondary" onclick="limpiarFiltros()">Limpiar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Descripción / Comercio</th>
+              <th>Cuenta</th>
+              <th>Categoría</th>
+              <th>Tipo</th>
+              <th style="text-align:right">Monto</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tbodyTx">
+            <tr><td colspan="7"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination" id="paginacion"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal cambiar categoría -->
+<div class="modal-overlay hidden" id="modalCat">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Cambiar categoría</h3>
+      <button onclick="cerrarModalCat()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--text-muted)">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <p id="modalCatDesc" style="margin-bottom:12px;font-size:.875rem;color:var(--text-muted)"></p>
+      <div class="form-group">
+        <label>Categoría</label>
+        <select id="modalCatSelect"></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="cerrarModalCat()">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarCategoria()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="/static/js/transacciones.js"></script>
+</body>
+</html>

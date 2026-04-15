@@ -103,3 +103,18 @@ app.include_router(reportes.router,      prefix="/api/reportes",      tags=["Rep
 @app.get("/", include_in_schema=False)
 def dashboard(request: Request):
     return templates.TemplateResponse("dashboard.html", {"request": request})
+
+
+@app.get("/transacciones", include_in_schema=False)
+def pagina_transacciones(request: Request):
+    return templates.TemplateResponse("transacciones.html", {"request": request})
+
+
+@app.get("/cuentas", include_in_schema=False)
+def pagina_cuentas(request: Request):
+    return templates.TemplateResponse("cuentas.html", {"request": request})
+
+
+@app.get("/reportes", include_in_schema=False)
+def pagina_reportes(request: Request):
+    return templates.TemplateResponse("reportes.html", {"request": request})
