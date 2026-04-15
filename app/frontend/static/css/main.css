@@ -26,7 +26,7 @@
 
   --text:         #b8cce0;
   --text-bright:  #e8f4ff;
-  --text-dim:     #3a4a6a;
+  --text-dim:     #5a7a9a;
   --border:       #1a2448;
   --border-neon:  rgba(0,245,255,.25);
 
@@ -103,7 +103,7 @@ body::before {
 
 .sidebar-brand .subtitle {
   font-size: .65rem;
-  color: var(--text-dim);
+  color: var(--cyan-dim);
   margin-top: 3px;
   letter-spacing: 1px;
   text-transform: uppercase;
