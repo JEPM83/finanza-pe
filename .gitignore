@@ -7,6 +7,7 @@ env/
 .env
 config/token.json
 config/credentials.json
+config/client_secret_*.json
 
 # Base de datos local
 data/
