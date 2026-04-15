@@ -15,17 +15,18 @@ class BCPParser(BaseParser):
     ]
 
     # Mapeo: últimos 4 dígitos o nombre de cuenta → nombre en el sistema
+    # IMPORTANTE: los patrones de texto se evalúan primero (más específicos que dígitos)
     _MAPA_CUENTAS = {
-        "9879": "Visa Oro BCP",
-        "2683": "BCP Soles",
-        "0106": "BCP Dólares",
-        "4168": "BCP Soles",
-        "7023": "BCP Dólares",
-        "7059": "BCP Soles",
         "clasica": "BCP Soles",
         "cuenta corriente": "BCP Soles",
         "cuenta premio": "BCP Dólares",
         "cuenta de ahorros": "BCP Soles",
+        "9879": "Visa Oro BCP",
+        "2683": "BCP Soles",
+        "0106": "BCP Dólares",
+        "4168": "BCP Soles",
+        "7023": "BCP Soles",
+        "7059": "BCP Soles",
     }
 
     def _resolver_cuenta(self, texto: str) -> str:
