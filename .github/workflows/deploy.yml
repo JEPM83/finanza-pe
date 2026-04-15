@@ -59,10 +59,6 @@ jobs:
           script: |
             set -e
 
-            echo "==> Sync config files"
-            cd /home/axl18/finanza-pe
-            git pull origin main
-
             echo "==> Login to ghcr.io"
             echo "$GHCR_TOKEN" | docker login ghcr.io -u jepm83 --password-stdin
 
