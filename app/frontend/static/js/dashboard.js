@@ -136,7 +136,7 @@ async function cargarDashboard() {
       .join('');
   } else {
     document.getElementById('leyendaCategoria').innerHTML =
-      '<p style="font-size:.8rem;color:var(--text-muted);text-align:center">Sin gastos este mes</p>';
+      '<p style="font-size:.8rem;color:var(--text-dim);text-align:center">Sin gastos este mes</p>';
   }
 
   // Tabla recientes
@@ -152,9 +152,9 @@ async function cargarDashboard() {
     const signo = tx.tipo === 'cargo' ? '-' : '+';
     const mon   = tx.moneda === 'USD' ? '$' : 'S/';
     return `<tr>
-      <td style="color:var(--text-muted);font-size:.8rem">${fecha}</td>
+      <td style="color:var(--cyan-dim);font-size:.8rem">${fecha}</td>
       <td title="${tx.descripcion}">${desc}</td>
-      <td style="font-size:.8rem;color:var(--text-muted)">${tx.cuenta_nombre || '—'}</td>
+      <td style="font-size:.8rem;color:var(--text-dim)">${tx.cuenta_nombre || '—'}</td>
       <td style="text-align:right" class="${cls}">${signo}${mon} ${fmt(tx.monto)}</td>
     </tr>`;
   }).join('');

@@ -103,7 +103,7 @@ async function buscar(resetOffset = true) {
     const fecha   = tx.fecha.slice(0, 10);
     const hora    = tx.fecha.slice(11, 16);
     const desc    = tx.descripcion.length > 45 ? tx.descripcion.slice(0, 45) + '…' : tx.descripcion;
-    const comercio = tx.comercio ? `<br><small style="color:var(--text-muted)">${tx.comercio}</small>` : '';
+    const comercio = tx.comercio ? `<br><small style="color:var(--text-dim)">${tx.comercio}</small>` : '';
     const catColor = tx.categoria_color || '#aaa';
     const catNom   = tx.categoria_nombre || '—';
     const catIcon  = tx.categoria_icono  || '📦';
@@ -115,10 +115,10 @@ async function buscar(resetOffset = true) {
     return `<tr>
       <td style="font-size:.8rem">
         <span style="color:var(--text)">${fecha}</span><br>
-        <span style="color:var(--text-muted)">${hora}</span>
+        <span style="color:var(--text-dim)">${hora}</span>
       </td>
       <td>${desc}${comercio}</td>
-      <td style="font-size:.82rem;color:var(--text-muted)">${tx.cuenta_nombre || '—'}</td>
+      <td style="font-size:.82rem;color:var(--text-dim)">${tx.cuenta_nombre || '—'}</td>
       <td>
         <span class="badge-cat" style="background:${catColor}22;color:${catColor};font-size:.72rem;padding:3px 8px;border-radius:20px">
           ${catIcon} ${catNom}

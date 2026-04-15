@@ -51,9 +51,9 @@ async function cargarCuentas() {
       <div class="meta">
         <span><span class="account-type-badge">${TIPO_LABELS[c.tipo] || c.tipo}</span></span>
         <span>${c.moneda}</span>
-        <a href="/transacciones?cuenta_id=${c.id}" style="color:var(--brand);text-decoration:none;font-weight:600;margin-left:auto">Ver →</a>
+        <a href="/transacciones?cuenta_id=${c.id}" style="color:var(--cyan);text-decoration:none;font-weight:600;margin-left:auto">Ver →</a>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.78rem;color:var(--text-muted)">
+      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.78rem;color:var(--text-dim)">
         <span>Abonos: ${mon} ${fmt(c.total_abonos)}</span>
         <span>Cargos: ${mon} ${fmt(c.total_cargos)}</span>
       </div>

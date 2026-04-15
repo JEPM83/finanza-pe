@@ -105,9 +105,9 @@ function renderEvolucion(data) {
         },
       },
       scales: {
-        x: { ticks: { color: '#3a4a6a', font: { family: 'JetBrains Mono', size: 11 } }, grid: { color: '#1a2448' } },
+        x: { ticks: { color: '#5a7a9a', font: { family: 'JetBrains Mono', size: 11 } }, grid: { color: '#1a2448' } },
         y: {
-          ticks: { color: '#3a4a6a', font: { family: 'JetBrains Mono', size: 10 }, callback: v => 'S/ ' + fmt(v) },
+          ticks: { color: '#5a7a9a', font: { family: 'JetBrains Mono', size: 10 }, callback: v => 'S/ ' + fmt(v) },
           grid: { color: '#1a2448' },
           beginAtZero: true,
         },
@@ -122,7 +122,7 @@ function renderCategorias(data) {
 
   if (!data.length) {
     document.getElementById('leyendaCat').innerHTML =
-      '<p style="text-align:center;color:var(--text-muted);font-size:.875rem">Sin gastos en el mes seleccionado</p>';
+      '<p style="text-align:center;color:var(--text-dim);font-size:.875rem">Sin gastos en el mes seleccionado</p>';
     return;
   }
 
@@ -166,7 +166,7 @@ function renderCategorias(data) {
       </span>
       <span>
         <strong>S/ ${fmt(c.total)}</strong>
-        <span style="color:var(--text-muted);margin-left:4px">${((c.total/total)*100).toFixed(1)}%</span>
+        <span style="color:var(--cyan-dim);margin-left:4px">${((c.total/total)*100).toFixed(1)}%</span>
       </span>
     </div>`).join('');
 }
@@ -180,10 +180,10 @@ function renderComercios(data) {
   }
   tbody.innerHTML = data.map((c, i) => `
     <tr>
-      <td style="color:var(--text-muted);font-weight:700">${i+1}</td>
+      <td style="color:var(--cyan-dim);font-weight:700">${i+1}</td>
       <td>${c.comercio}</td>
       <td style="text-align:right" class="amount-cargo">S/ ${fmt(c.total)}</td>
-      <td style="text-align:center;color:var(--text-muted)">${c.cantidad}</td>
+      <td style="text-align:center;color:var(--cyan-dim)">${c.cantidad}</td>
     </tr>`).join('');
 }
 
