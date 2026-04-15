@@ -47,9 +47,9 @@ PARSERS = [
 ]
 
 
-def _construir_query_gmail() -> str:
+def _construir_query_gmail(dias: int = 1) -> str:
     dominios = " OR ".join(f"from:*@{d}" for d in DOMINIOS_BANCARIOS)
-    return f"({dominios}) newer_than:1d"
+    return f"({dominios}) newer_than:{dias}d"
 
 
 def _obtener_credenciales() -> Credentials:
@@ -132,16 +132,16 @@ def _resolver_cuenta_id(nombre_cuenta: str, db) -> int | None:
     return cuenta.id if cuenta else None
 
 
-def procesar_emails():
+def procesar_emails(dias: int = 1):
     """Job principal: lee emails nuevos y registra transacciones."""
-    logger.info("Gmail Watcher: iniciando ciclo de revisión...")
+    logger.info(f"Gmail Watcher: iniciando ciclo de revisión (últimos {dias} días)...")
     creds = _obtener_credenciales()
     service = build("gmail", "v1", credentials=creds)
     db = SessionLocal()
 
     try:
-        query = _construir_query_gmail()
-        resultado = service.users().messages().list(userId="me", q=query, maxResults=50).execute()
+        query = _construir_query_gmail(dias)
+        resultado = service.users().messages().list(userId="me", q=query, maxResults=500).execute()
         mensajes = resultado.get("messages", [])
 
         nuevos = 0
