@@ -3,16 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cuentas — Finanza PE</title>
+  <title>[ FINANZA.PE ] :: CUENTAS</title>
   <link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
 
-<!-- Sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <nav class="sidebar">
   <div class="sidebar-brand">
-    <h1>// FINANZA.PE</h1>
-    <div class="subtitle">&gt;&gt;&gt; financial_monitor v0.1</div>
+    <div>
+      <h1>// FINANZA.PE</h1>
+      <div class="subtitle">&gt;&gt;&gt; financial_monitor v0.1</div>
+    </div>
+    <button class="sidebar-close" id="btnMenuClose">&#x2715;</button>
   </div>
   <div class="nav-section">
     <div class="nav-label">&gt; sistema</div>
@@ -37,23 +41,26 @@
 
 <div class="main-wrap">
   <div class="topbar">
-    <h2>Cuentas</h2>
-    <span style="font-size:.8rem;color:var(--text-dim)">Saldos calculados desde transacciones registradas</span>
+    <div style="display:flex;align-items:center">
+      <button class="btn-hamburger" id="btnMenuOpen">&#9776;</button>
+      <h2>Cuentas</h2>
+    </div>
+    <span style="font-size:.65rem;color:var(--text-dim);letter-spacing:.5px;text-transform:uppercase">Saldos calculados desde transacciones</span>
   </div>
 
   <div class="content">
 
     <!-- Resumen total -->
-    <div class="stats-grid" style="margin-bottom:24px" id="resumenGrid">
+    <div class="stats-grid" style="margin-bottom:20px">
       <div class="stat-card balance">
-        <div class="stat-label">Total en Soles (PEN)</div>
+        <div class="stat-label">Total Soles (PEN)</div>
         <div class="stat-value" id="totalPEN">—</div>
-        <div class="stat-sub">suma de cuentas en PEN</div>
+        <div class="stat-sub">cuentas en PEN</div>
       </div>
       <div class="stat-card neutral">
-        <div class="stat-label">Total en Dólares (USD)</div>
+        <div class="stat-label">Total Dólares (USD)</div>
         <div class="stat-value" id="totalUSD">—</div>
-        <div class="stat-sub">suma de cuentas en USD</div>
+        <div class="stat-sub">cuentas en USD</div>
       </div>
       <div class="stat-card expense">
         <div class="stat-label">Deuda tarjetas (PEN)</div>
@@ -70,6 +77,7 @@
   </div>
 </div>
 
+<script src="/static/js/app.js"></script>
 <script src="/static/js/cuentas.js"></script>
 </body>
 </html>

@@ -3,16 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reportes — Finanza PE</title>
+  <title>[ FINANZA.PE ] :: REPORTES</title>
   <link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
 
-<!-- Sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <nav class="sidebar">
   <div class="sidebar-brand">
-    <h1>// FINANZA.PE</h1>
-    <div class="subtitle">&gt;&gt;&gt; financial_monitor v0.1</div>
+    <div>
+      <h1>// FINANZA.PE</h1>
+      <div class="subtitle">&gt;&gt;&gt; financial_monitor v0.1</div>
+    </div>
+    <button class="sidebar-close" id="btnMenuClose">&#x2715;</button>
   </div>
   <div class="nav-section">
     <div class="nav-label">&gt; sistema</div>
@@ -37,24 +41,27 @@
 
 <div class="main-wrap">
   <div class="topbar">
-    <h2>Reportes</h2>
-    <div style="display:flex;align-items:center;gap:8px">
+    <div style="display:flex;align-items:center">
+      <button class="btn-hamburger" id="btnMenuOpen">&#9776;</button>
+      <h2>Reportes</h2>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <label style="font-size:.65rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase">Mes:</label>
       <select id="selectorMes"></select>
       <select id="selectorAnio"></select>
-      <button class="btn btn-primary btn-sm" onclick="cargarReporte()">Actualizar</button>
+      <button class="btn btn-primary btn-sm" onclick="cargarReporte()">[ OK ]</button>
     </div>
   </div>
 
   <div class="content">
 
     <!-- Evolución mensual -->
-    <div class="card" style="margin-bottom:24px">
+    <div class="card" style="margin-bottom:20px">
       <div class="card-header">
         <h3>Evolución mensual — últimos 6 meses (PEN)</h3>
       </div>
       <div class="card-body">
-        <div class="chart-container" style="height:280px">
+        <div class="chart-container" style="height:260px">
           <canvas id="chartEvolucion"></canvas>
         </div>
       </div>
@@ -68,7 +75,7 @@
           <span id="labelCatMes" style="font-size:.68rem;color:var(--text-dim);letter-spacing:.5px"></span>
         </div>
         <div class="card-body">
-          <div class="chart-container" style="height:260px">
+          <div class="chart-container" style="height:240px">
             <canvas id="chartCategorias"></canvas>
           </div>
           <div id="leyendaCat" style="margin-top:12px"></div>
@@ -87,7 +94,7 @@
                 <th>#</th>
                 <th>Comercio</th>
                 <th style="text-align:right">Monto</th>
-                <th style="text-align:center">Veces</th>
+                <th style="text-align:center" class="hide-mobile">Veces</th>
               </tr>
             </thead>
             <tbody id="tbodyComercio">
@@ -102,6 +109,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="/static/js/app.js"></script>
 <script src="/static/js/reportes.js"></script>
 </body>
 </html>

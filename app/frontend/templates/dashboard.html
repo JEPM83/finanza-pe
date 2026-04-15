@@ -8,11 +8,17 @@
 </head>
 <body>
 
+<!-- Overlay sidebar (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <!-- Sidebar -->
 <nav class="sidebar">
   <div class="sidebar-brand">
-    <h1>// FINANZA.PE</h1>
-    <div class="subtitle">&gt;&gt;&gt; financial_monitor v0.1</div>
+    <div>
+      <h1>// FINANZA.PE</h1>
+      <div class="subtitle">&gt;&gt;&gt; financial_monitor v0.1</div>
+    </div>
+    <button class="sidebar-close" id="btnMenuClose">&#x2715;</button>
   </div>
   <div class="nav-section">
     <div class="nav-label">&gt; sistema</div>
@@ -37,7 +43,10 @@
 
 <div class="main-wrap">
   <div class="topbar">
-    <h2>Dashboard</h2>
+    <div style="display:flex;align-items:center">
+      <button class="btn-hamburger" id="btnMenuOpen">&#9776;</button>
+      <h2>Dashboard</h2>
+    </div>
     <button class="btn btn-primary btn-sm" onclick="abrirModalEfectivo()">[ + ] Registrar efectivo</button>
   </div>
 
@@ -72,7 +81,7 @@
       <div class="card">
         <div class="card-header">
           <h3>Gastos por categoría</h3>
-          <span id="mesLabel" style="font-size:.8rem;color:var(--text-dim)"></span>
+          <span id="mesLabel" style="font-size:.68rem;color:var(--text-dim)"></span>
         </div>
         <div class="card-body">
           <div class="chart-container" style="height:260px">
@@ -93,7 +102,7 @@
               <tr>
                 <th>Fecha</th>
                 <th>Descripción</th>
-                <th>Cuenta</th>
+                <th class="hide-mobile">Cuenta</th>
                 <th style="text-align:right">Monto</th>
               </tr>
             </thead>
@@ -112,7 +121,7 @@
 <div class="modal-overlay hidden" id="modalEfectivo">
   <div class="modal">
     <div class="modal-header">
-      <h3>Registrar transacción en efectivo</h3>
+      <h3>Registrar efectivo</h3>
       <button onclick="cerrarModal()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--text-dim)">&#x2715;</button>
     </div>
     <div class="modal-body">
@@ -143,10 +152,10 @@
   </div>
 </div>
 
-<!-- Toast container -->
 <div class="toast-container" id="toastContainer"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="/static/js/app.js"></script>
 <script src="/static/js/dashboard.js"></script>
 </body>
 </html>
