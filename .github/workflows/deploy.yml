@@ -53,8 +53,14 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
+          envs: GHCR_TOKEN
+          env:
+            GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
           script: |
             set -e
+
+            echo "==> Login to ghcr.io"
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u jepm83 --password-stdin
 
             echo "==> Pull latest image"
             docker pull ghcr.io/jepm83/finanza-pe:latest
